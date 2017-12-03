@@ -1,7 +1,7 @@
 import {authorize, logout} from '../actions/auth';
 import {take, put, call, select} from 'redux-saga/effects';
 import {setTokenApi, clearTokenApi} from '../api';
-import {getIsAuthorized} from '../reducers/auth';
+import {getIsAuthorized} from '../reducers/';
 import {
   getTokenFromLocalStorage,
   setTokenToLocalStorage,
