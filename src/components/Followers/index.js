@@ -10,7 +10,7 @@ class Followers extends Component {
     const {
       fetchFollowersRequest,
       login,
-      followers: { isFetched, isFetching }
+      followers: { isFetched, isFetching  }
     } = this.props;
     if (!isFetched && !isFetching) {
       fetchFollowersRequest(login);
@@ -18,7 +18,7 @@ class Followers extends Component {
   }
 
   render() {
-    const { followers: { isFetched, isFetching, followers } } = this.props;
+    const { followers: { isFetched, isFetching, followers   } } = this.props;
 
     if (!isFetched || isFetching) {
       return <Spinner size="64px" color="fuchsia" gap={5} />;
@@ -26,7 +26,7 @@ class Followers extends Component {
 
     return (
       <div className="followers">
-        {followers.map(value => <Follower key={value.id} element={value} />)}
+        {followers.map(value => <Follower   key={value.id} element={value} />)}
       </div>
     );
   }

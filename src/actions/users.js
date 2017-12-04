@@ -9,3 +9,7 @@ export const {
   "FETCH_USER_FAILURE",
   "FETCH_USER_REQUEST"
 );
+
+export const { fetchTokenOwnerRequest } = createActions(
+  "FETCH_TOKEN_OWNER_REQUEST"
+);

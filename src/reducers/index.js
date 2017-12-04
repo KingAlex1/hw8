@@ -12,7 +12,6 @@ export default combineReducers({
 });
 
 export const getUsers = state => state.users;
-export const getIsAuthorized = state =>
-  state.auth.isAuthorized;
+export const getIsAuthorized = state => state.auth.isAuthorized;
 export const getFollowers = state => state.followers;
 

@@ -1,7 +1,8 @@
 import {
   fetchUserSuccess,
   fetchUserFailure,
-  fetchUserRequest
+  fetchUserRequest,
+  fetchTokenOwnerRequest
 } from "../actions/users";
 import { handleActions } from "redux-actions";
 
@@ -23,7 +24,7 @@ const users = handleActions(
       ...state,
       isFetching: false,
       isFetched: true,
-      user: action.payload.data,
+      user: action.payload,
       error: false
     }),
     [fetchUserFailure]: (state, action) => ({
@@ -31,6 +32,13 @@ const users = handleActions(
       isFetching: false,
       isFetched: true,
       error: action.error
+    }),
+    [fetchTokenOwnerRequest]: (state, action) => ({
+      ...state,
+      isFetching: true,
+      isFetched: false,
+      user: {},
+      error: false
     })
   },
   initState
