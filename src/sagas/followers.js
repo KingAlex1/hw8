@@ -2,14 +2,14 @@ import {
   fetchFollowersRequest,
   fetchFollowersSuccess,
   fetchFollowersFailure
-} from "../actions/repos";
+} from "../actions/users";
 import { takeLatest, call, put } from "redux-saga/effects";
 import { getUserFollowers } from "../api";
+import requestFlow from "../sagas/request";
 
-function* onfetchFollowersRequest(action) {
-  const userName = action.payload;
+export function* fetchFollowersSaga(action) {
   try {
-    const user = yield call(getUserFollowers, userName);
+    const user = yield call(requestFlow, getUserFollowers, action.payload);
     yield put(fetchFollowersSuccess(user));
   } catch (error) {
     yield put(fetchFollowersFailure(error));
@@ -17,9 +17,5 @@ function* onfetchFollowersRequest(action) {
 }
 
 export function* fetchFollowersWatch() {
-  yield takeLatest(
-    fetchFollowersRequest,
-    onfetchFollowersRequest
-  );
+  yield takeLatest(fetchFollowersRequest, fetchFollowersSaga);
 }
-

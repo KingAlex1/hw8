@@ -1,27 +1,40 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { fetchFollowersRequest } from "../../actions/repos";
+import { fetchFollowersRequest } from "../../actions/users";
 import { getFollowers } from "../../reducers";
 import Follower from "../Follower";
 import Spinner from "react-svg-spinner";
 
-class Followers extends Component {
+export class Followers extends Component {
   componentDidMount() {
     const {
       fetchFollowersRequest,
       login,
-      followers: { isFetched, isFetching  }
+      followers: { isFetching  }
     } = this.props;
-    if (!isFetched && !isFetching) {
+    if (!isFetching) {
       fetchFollowersRequest(login);
     }
   }
 
-  render() {
-    const { followers: { isFetched, isFetching, followers   } } = this.props;
+  componentWillReceiveProps(nextProps) {
+    if (this.props.login !== nextProps.login) {
+      const {
+        fetchFollowersRequest,
+        login,
+        followers: { isFetching }
+      } = nextProps;
+      if (!isFetching) {
+        fetchFollowersRequest(login);
+      }
+    }
+  }
 
-    if (!isFetched || isFetching) {
-      return <Spinner size="64px" color="fuchsia" gap={5} />;
+  render() {
+    const { followers: {  isFetching, followers   } } = this.props;
+
+    if (isFetching) {
+      return <Spinner size="64px" color="red" gap={5} />;
     }
 
     return (

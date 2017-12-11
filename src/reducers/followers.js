@@ -2,8 +2,9 @@ import {
   fetchFollowersRequest,
   fetchFollowersSuccess,
   fetchFollowersFailure
-} from "../actions/repos";
+} from "../actions/users";
 import { handleActions } from "redux-actions";
+
 
 const initState = {
   isFetching: false,

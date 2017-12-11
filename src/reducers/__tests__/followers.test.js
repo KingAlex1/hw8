@@ -4,7 +4,7 @@ import {
   fetchFollowersRequest,
   fetchFollowersSuccess,
   fetchFollowersFailure
-} from "../../actions/repos";
+} from "../../actions/users";
 
 const initState = {
   isFetching: false,
