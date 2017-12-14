@@ -1,23 +1,28 @@
 import {
-  fetchUserRequest,
   fetchUserSuccess,
-  fetchUserFailure
+  fetchUserFailure,
+  fetchUserRequest
 } from "../actions/users";
+import { fetchTokenOwnerRequest } from "../actions/users";
 import { takeLatest, call, put } from "redux-saga/effects";
+import { getTokenOwner } from "../api";
 import { getUserInformation } from "../api";
-import { logout } from "../actions/auth";
+import requestFlow from "../sagas/request";
 
-function* onFetchUserRequest(action) {
-  const userName = action.payload;
+export function* fetchUserSaga(action) {
   try {
-    const user = yield call(getUserInformation, userName);
-    yield put(fetchUserSuccess(user));
+    let response;
+    if (fetchTokenOwnerRequest.toString() === action.type) {
+      response = yield call(requestFlow, getTokenOwner, action.payload);
+    } else {
+      response = yield call(requestFlow, getUserInformation, action.payload);
+    }
+    yield put(fetchUserSuccess(response.data));
   } catch (error) {
     yield put(fetchUserFailure(error));
-    yield put (logout());
   }
 }
 
 export function* fetchUserWatch() {
-  yield takeLatest(fetchUserRequest, onFetchUserRequest);
+  yield takeLatest([fetchTokenOwnerRequest, fetchUserRequest], fetchUserSaga);
 }

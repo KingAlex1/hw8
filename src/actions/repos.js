@@ -1,11 +1,11 @@
 import { createActions } from "redux-actions";
 
 export const {
-  fetchFollowersSuccess,
-  fetchFollowersFailure,
-  fetchFollowersRequest
+  fetchUserReposRequest,
+  fetchUserReposSuccess,
+  fetchUserReposFailure
 } = createActions(
-  "FETCH_FOLLOWERS_SUCCESS",
-  "FETCH_FOLLOWERS_FAILURE",
-  "FETCH_FOLLOWERS_REQUEST"
+  "FETCH_USER_REPOS_REQUEST",
+  "FETCH_USER_REPOS_SUCCESS",
+  "FETCH_USER_REPOS_FAILURE"
 );

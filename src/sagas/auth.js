@@ -1,17 +1,24 @@
-import {authorize, logout} from '../actions/auth';
-import {take, put, call, select} from 'redux-saga/effects';
-import {setTokenApi, clearTokenApi} from '../api';
-import {getIsAuthorized} from '../reducers/';
+import { authorize, logout } from "../actions/auth";
+import {
+  take,
+  put,
+  call,
+  select
+} from "redux-saga/effects";
+import { setTokenApi, clearTokenApi } from "../api";
+import { getIsAuthorized } from "../reducers";
 import {
   getTokenFromLocalStorage,
   setTokenToLocalStorage,
-  removeTokenFromLocalStorage,
-} from '../localStorage';
+  removeTokenFromLocalStorage
+} from "../localStorage";
 
 export function* authFlow() {
   while (true) {
     const isAuthorized = yield select(getIsAuthorized);
-    const localStorageToken = yield call(getTokenFromLocalStorage);
+    const localStorageToken = yield call(
+      getTokenFromLocalStorage
+    );
     let token;
 
     if (!isAuthorized) {

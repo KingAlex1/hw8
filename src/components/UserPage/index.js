@@ -3,30 +3,44 @@ import { connect } from "react-redux";
 import Spinner from "react-svg-spinner";
 import Followers from "../Followers";
 import { getUsers } from "../../reducers";
-import { fetchUserRequest } from "../../actions/users";
+import { fetchUserRequest, fetchTokenOwnerRequest } from "../../actions/users";
+import { getTokenFromLocalStorage } from "../../localStorage";
 
-class UserPage extends Component {
+export class UserPage extends Component {
   componentDidMount() {
     const {
       fetchUserRequest,
-      match: { params: { name } },
+      fetchTokenOwnerRequest,
+      match: { params },
       users: { isFetching }
     } = this.props;
-    if (!isFetching) {
-      fetchUserRequest(name);
+    if (params.name === undefined) {
+      const token = getTokenFromLocalStorage();
+      fetchTokenOwnerRequest(token);
+    } else {
+      if (!isFetching) {
+        fetchUserRequest(params.name);
+      }
     }
   }
 
   componentWillReceiveProps(nextProps) {
     const {
+      fetchTokenOwnerRequest,
       fetchUserRequest,
       match: { params: { name } }
     } = this.props;
-    const {
-      match: { params: { name: newName } }
-    } = nextProps;
+    const { match: { params: { name: newName } } } = nextProps;
+
     if (name !== newName) {
-      fetchUserRequest(newName);
+      switch (newName) {
+        case undefined:
+          const token = getTokenFromLocalStorage();
+          fetchTokenOwnerRequest(token);
+          break;
+        default:
+          fetchUserRequest(newName);
+      }
     }
   }
 
@@ -40,36 +54,41 @@ class UserPage extends Component {
       }
     } = this.props;
 
-    if (!isFetched || isFetching) {
+    if (isFetching) {
       return <Spinner />;
     }
-    if(error){
+    if(error || !isFetched){
       return(
         <div className="user__error"> Ошибка...</div>
       )
-    }
+    } else if (isFetched) {
 
     return (
       <div className="user">
         <div className="user__info">
-          <img
-            src={avatar_url}
-            alt=""
-            className="user__pic"
-          />
+          <div className='avatar'>
+            <img
+                src={avatar_url}
+                alt=""
+                className="user__pic"
+              />
+          </div>
           <div className="user__data">
-            <h3 className="user_name">{login}</h3>
-            <p className="user__follovers">{followers}</p>
+            <h3 className="user__name">{login}</h3>
+            <p className="user__followers">{followers}</p>
             <p className="user__repos">{public_repos}</p>
           </div>
           <Followers login={login} />
         </div>
       </div>
     );
-  }
+  }}
 }
 
-const mapDispatchToProps = { fetchUserRequest };
+const mapDispatchToProps = {
+  fetchUserRequest,
+  fetchTokenOwnerRequest
+};
 const mapStateToProps = state => ({
   users: getUsers(state)
 });

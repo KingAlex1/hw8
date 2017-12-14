@@ -6,12 +6,12 @@ class Follower extends Component {
     const { element: { avatar_url, login } } = this.props;
     return (
       <div className="follower">
-        <img
+        <img 
           src={avatar_url}
           alt=""
           className="follower__avatar"
         />
-        <Link to={`/user/${login}`}>{login}</Link>
+        <Link className='follower__link' to={`/user/${login}`}>{login}</Link>
       </div>
     );
   }

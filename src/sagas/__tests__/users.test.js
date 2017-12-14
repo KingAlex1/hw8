@@ -1,26 +1,53 @@
-import {fetchUserSuccess, fetchUserFailure} from '../../actions/users';
-import {call, put} from 'redux-saga/effects';
-import {fetchUserSaga} from '../users';
-import {getUserInformation} from '../../api';
+import {
+  fetchUserSuccess,
+  fetchUserFailure,
+  fetchTokenOwnerRequest,
+  fetchUserRequest
+} from "../../actions/users";
+import { call, put } from "redux-saga/effects";
+import { fetchUserSaga } from "../users";
+import { getUserInformation } from "../../api";
+import requestFlow from "../request";
+import { getTokenOwner } from "../../api";
 
-describe('Saga users:', () => {
-  it('call getUserInformation', () => {
-    const action = {payload: 'test_login'};
-    const saga = fetchUserSaga(action);
-    expect(saga.next().value).toEqual(call(getUserInformation, 'test_login'));
+describe("Saga users:", () => {
+  describe("fetchTokenOwnerRequest action", () => {
+    const saga = fetchUserSaga(fetchTokenOwnerRequest());
+    it("Effect call getTokenOwner", () => {
+      expect(saga.next().value).toEqual(
+        call(requestFlow, getTokenOwner, undefined)
+      );
+    });
+    it("Effect put fetchUserSuccess", () => {
+      expect(saga.next({ data: "data" }).value).toEqual(
+        put(fetchUserSuccess("data"))
+      );
+    });
   });
-  it('dispatch action fetchUserSuccess with user from call on success call', () => {
-    const action = {payload: 'test_login'};
-    const user = {login: 'test', id: '1'};
-    const saga = fetchUserSaga(action);
-    saga.next();
-    expect(saga.next(user).value).toEqual(put(fetchUserSuccess(user)));
+
+  describe("fetchUserRequest action", () => {
+    const saga = fetchUserSaga(fetchUserRequest());
+    it("Effect call getUserInformation", () => {
+      expect(saga.next().value).toEqual(
+        call(requestFlow, getUserInformation, undefined)
+      );
+    });
+    it("Effect put fetchUserSuccess", () => {
+      expect(saga.next({ data: "data" }).value).toEqual(
+        put(fetchUserSuccess("data"))
+      );
+    });
   });
-  it('dispatch action fetchUserFailure with user from call on success call', () => {
-    const action = {payload: 'test_login'};
-    const error = new Error('test error');
-    const saga = fetchUserSaga(action);
-    saga.next();
-    expect(saga.throw(error).value).toEqual(put(fetchUserFailure(error)));
+
+  describe("Error handling", () => {
+    const saga = fetchUserSaga(fetchUserRequest());
+    it("Effect call getUserInformation", () => {
+      expect(saga.next().value).toEqual(
+        call(requestFlow, getUserInformation, undefined)
+      );
+    });
+    it("Effect put fetchUserFailure", () => {
+      expect(saga.throw("error").value).toEqual(put(fetchUserFailure("error")));
+    });
   });
 });
